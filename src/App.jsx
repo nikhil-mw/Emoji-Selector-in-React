@@ -1,11 +1,32 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
-const EmojiSelector = () => {
+const EmojiSelectorApp = () => {
   const [userName, setUserName] = useState("");
   const [emojiUrl, setEmojiUrl] = useState(
     "https://api.dicebear.com/9.x/adventurer/svg?seed=d"
   );
   const [users, setUsers] = useState([]);
+  const [dbName, setDbName] = useState("");
+
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDbName(userName);
+    }, 1);
+
+    return () => {
+      clearTimeout(handler);
+    };
+  }, [userName]);
+
+  useEffect(() => {
+    if (dbName) {
+      setEmojiUrl(
+        `https://api.dicebear.com/9.x/adventurer/svg?seed=${encodeURIComponent(
+          dbName
+        )}`
+      );
+    }
+  }, [dbName]);
 
   const handleInputChange = (e) => {
     setUserName(e.target.value);
@@ -19,9 +40,14 @@ const EmojiSelector = () => {
     const newAvatarUrl = `https://api.dicebear.com/9.x/adventurer/svg?seed=${encodeURIComponent(
       userName
     )}`;
-    setEmojiUrl(newAvatarUrl);
     setUsers([...users, { name: userName, avatarUrl: newAvatarUrl }]);
     setUserName("");
+  };
+
+  const handleKeyPress = (e) => {
+    if (e.key === "Enter") {
+      handleAvatarChange();
+    }
   };
 
   const handleDelete = (index) => {
@@ -39,6 +65,7 @@ const EmojiSelector = () => {
             type="text"
             value={userName}
             onChange={handleInputChange}
+            onKeyPress={handleKeyPress}
             placeholder="Enter Your Name"
             className="w-full p-3 border rounded-lg mb-4"
           />
@@ -79,4 +106,4 @@ const EmojiSelector = () => {
   );
 };
 
-export default EmojiSelector;
+export default EmojiSelectorApp;
