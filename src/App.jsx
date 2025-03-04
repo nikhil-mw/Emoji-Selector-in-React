@@ -11,7 +11,7 @@ const EmojiSelectorApp = () => {
   useEffect(() => {
     const handler = setTimeout(() => {
       setDbName(userName);
-    }, 1);
+    }, 1100);
 
     return () => {
       clearTimeout(handler);
